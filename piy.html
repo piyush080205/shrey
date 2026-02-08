@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Chocolate Day ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ================================
+           CSS Reset & Base Styles
+           ================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #CD853F 100%);
+            position: relative;
+        }
+
+        /* ================================
+           Floating Hearts Background
+           ================================ */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 182, 193, 0.6);
+            animation: floatHeart 10s infinite ease-in-out;
+            opacity: 0;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ================================
+           Screen Management
+           ================================ */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.8);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 10;
+        }
+
+        .screen.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        .content-wrapper {
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        /* ================================
+           Landing Screen Styles
+           ================================ */
+        .main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(3rem, 8vw, 5rem);
+            color: #FFE4E1;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            animation: titleBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes titleBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .chocolate-emoji {
+            font-size: clamp(4rem, 10vw, 8rem);
+            margin: 20px 0;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #FFF8DC;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* ================================
+           Button Styles
+           ================================ */
+        .btn {
+            position: relative;
+            padding: 15px 50px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            margin: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 8px 20px rgba(255, 20, 147, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 30px rgba(255, 20, 147, 0.6);
+            }
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #A0522D, #8B4513);
+            color: white;
+        }
+
+        .btn-restart {
+            background: linear-gradient(135deg, #FFB6C1, #FFC0CB);
+            color: #8B4513;
+        }
+
+        .btn-shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover .btn-shine {
+            left: 100%;
+        }
+
+        /* ================================
+           Question Screen Styles
+           ================================ */
+        .question-container {
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: #FFE4E1;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .emoji-display {
+            font-size: clamp(3rem, 8vw, 5rem);
+            margin: 30px 0;
+            animation: emojiWave 1.5s ease-in-out infinite;
+        }
+
+        @keyframes emojiWave {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        /* ================================
+           Main Screen Styles
+           ================================ */
+        .final-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: #FFE4E1;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.05);
+            }
+            50% {
+                transform: scale(1);
+            }
+            75% {
+                transform: scale(1.05);
+            }
+        }
+
+        .image-container {
+            margin: 40px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .image-frame {
+            position: relative;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFE4E1, #FFF0F5);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            animation: floatImage 3s ease-in-out infinite;
+        }
+
+        @keyframes floatImage {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .main-image {
+            max-width: 100%;
+            width: clamp(250px, 60vw, 400px);
+            height: auto;
+            border-radius: 15px;
+            display: block;
+            object-fit: cover;
+        }
+
+        .final-message {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #FFF8DC;
+            margin: 30px 0;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* ================================
+           Responsive Design
+           ================================ */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 80%;
+                max-width: 300px;
+            }
+            
+            .image-frame {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .question-title {
+                font-size: 1.8rem;
+            }
+            
+            .final-title {
+                font-size: 2rem;
+            }
+            
+            .chocolate-emoji,
+            .emoji-display {
+                font-size: 3rem;
+            }
+        }
+
+        /* ================================
+           Special Effects
+           ================================ */
+        @keyframes sparkle {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- Screen 1: Landing Page -->
+    <section id="landingScreen" class="screen active">
+        <div class="content-wrapper">
+            <h1 class="main-title">Happy Chocolate Day ❤️</h1>
+            <div class="chocolate-emoji">🍫</div>
+            <p class="subtitle">A sweet surprise awaits you...</p>
+            <button class="btn btn-start" id="startBtn">
+                Start
+                <span class="btn-shine"></span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Screen 2: Question 1 -->
+    <section id="question1Screen" class="screen">
+        <div class="content-wrapper">
+            <div class="question-container">
+                <h2 class="question-title">Do you like my Roses? ❤️</h2>
+                <div class="emoji-display">🌹💕</div>
+                <div class="button-group">
+                    <button class="btn btn-yes" id="q1YesBtn">
+                        Yes! ❤️
+                        <span class="btn-shine"></span>
+                    </button>
+                    <button class="btn btn-no" id="q1NoBtn">
+                        No
+                        <span class="btn-shine"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screen 3: Question 2 -->
+    <section id="question2Screen" class="screen">
+        <div class="content-wrapper">
+            <div class="question-container">
+                <h2 class="question-title">Do you accept my proposal? ❤️💕</h2>
+                <div class="emoji-display">💕💖💝</div>
+                <div class="button-group">
+                    <button class="btn btn-yes" id="q2YesBtn">
+                        Yes! 💕
+                        <span class="btn-shine"></span>
+                    </button>
+                    <button class="btn btn-no" id="q2NoBtn">
+                        No
+                        <span class="btn-shine"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screen 4: Main Message -->
+    <section id="mainScreen" class="screen">
+        <div class="content-wrapper">
+            <h1 class="final-title">Happy Chocolate Day ❤️</h1>
+            <div class="image-container">
+                <div class="image-frame">
+                    <!-- Clickable image that links to Google Drive -->
+                    <a href="https://drive.google.com/file/d/1a_bq_pEmFS6AhwSl1hwbXbE7ZxlZINVZ/view?usp=sharing" target="_blank">
+                        <img src="shrey.jpg.jpeg" 
+                             alt="Chocolate Day Image" 
+                             id="mainImage"
+                             class="main-image">
+                    </a>
+                </div>
+            </div>
+                </div>
+            </div>
+            <p class="final-message">Then This is For You Mrs.! 🍫💕</p>
+            <button class="btn btn-restart" id="restartBtn">
+                Start Over
+                <span class="btn-shine"></span>
+            </button>
+        </div>
+    </section>
+
+    <script>
+        // ================================
+        // Screen Navigation System
+        // ================================
+        class ChocolateDayApp {
+            constructor() {
+                this.currentScreen = 'landingScreen';
+                this.answers = {
+                    likesChocolate: null,
+                    lovesMe: null
+                };
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.createFloatingHearts();
+                this.startHeartAnimation();
+            }
+
+            setupEventListeners() {
+                // Landing screen - Start button
+                document.getElementById('startBtn').addEventListener('click', () => {
+                    this.navigateToScreen('question1Screen');
+                });
+
+                // Question 1 - Yes/No buttons
+                document.getElementById('q1YesBtn').addEventListener('click', () => {
+                    this.answers.likesChocolate = true;
+                    this.navigateToScreen('question2Screen');
+                    this.createCelebrationEffect();
+                });
+
+                document.getElementById('q1NoBtn').addEventListener('click', () => {
+                    this.answers.likesChocolate = false;
+                    this.navigateToScreen('question2Screen');
+                });
+
+                // Question 2 - Yes/No buttons
+                document.getElementById('q2YesBtn').addEventListener('click', () => {
+                    this.answers.lovesMe = true;
+                    this.navigateToScreen('mainScreen');
+                    this.createMassiveCelebration();
+                });
+
+                document.getElementById('q2NoBtn').addEventListener('click', () => {
+                    this.answers.lovesMe = false;
+                    this.navigateToScreen('mainScreen');
+                });
+
+                // Restart button
+                document.getElementById('restartBtn').addEventListener('click', () => {
+                    this.restart();
+                });
+
+                // Add button click animation
+                this.addButtonEffects();
+            }
+
+            navigateToScreen(screenId) {
+                // Remove active class from current screen
+                const currentScreenEl = document.getElementById(this.currentScreen);
+                currentScreenEl.classList.remove('active');
+
+                // Add active class to new screen
+                setTimeout(() => {
+                    const newScreenEl = document.getElementById(screenId);
+                    newScreenEl.classList.add('active');
+                    this.currentScreen = screenId;
+                }, 300);
+            }
+
+            restart() {
+                this.answers = {
+                    likesChocolate: null,
+                    lovesMe: null
+                };
+                this.navigateToScreen('landingScreen');
+            }
+
+            // ================================
+            // Floating Hearts Animation
+            // ================================
+            createFloatingHearts() {
+                const heartsContainer = document.getElementById('heartsContainer');
+                const heartSymbols = ['❤️', '💕', '💖', '💗', '💝', '💞', '🍫', '🌹'];
+
+                for (let i = 0; i < 20; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 5 + 's';
+                    heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    heartsContainer.appendChild(heart);
+                }
+            }
+
+            startHeartAnimation() {
+                setInterval(() => {
+                    this.addSingleHeart();
+                }, 2000);
+            }
+
+            addSingleHeart() {
+                const heartsContainer = document.getElementById('heartsContainer');
+                const heartSymbols = ['❤️', '💕', '💖', '💗', '💝', '💞', '🍫', '🌹'];
+                
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                
+                heartsContainer.appendChild(heart);
+
+                // Remove heart after animation completes
+                setTimeout(() => {
+                    heart.remove();
+                }, 10000);
+            }
+
+            // ================================
+            // Celebration Effects
+            // ================================
+            createCelebrationEffect() {
+                const heartsContainer = document.getElementById('heartsContainer');
+                
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.textContent = '🍫';
+                        heart.style.position = 'fixed';
+                        heart.style.left = Math.random() * 100 + '%';
+                        heart.style.top = '50%';
+                        heart.style.fontSize = '30px';
+                        heart.style.zIndex = '1000';
+                        heart.style.transition = 'all 2s ease-out';
+                        heartsContainer.appendChild(heart);
+
+                        setTimeout(() => {
+                            heart.style.transform = `translate(${(Math.random() - 0.5) * 500}px, ${(Math.random() - 0.5) * 500}px) rotate(${Math.random() * 720}deg)`;
+                            heart.style.opacity = '0';
+                        }, 10);
+
+                        setTimeout(() => {
+                            heart.remove();
+                        }, 2000);
+                    }, i * 50);
+                }
+            }
+
+            createMassiveCelebration() {
+                const heartsContainer = document.getElementById('heartsContainer');
+                const symbols = ['❤️', '💕', '💖', '💗', '💝', '🍫', '🌹', '✨'];
+                
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        const symbol = document.createElement('div');
+                        symbol.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                        symbol.style.position = 'fixed';
+                        symbol.style.left = '50%';
+                        symbol.style.top = '50%';
+                        symbol.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                        symbol.style.zIndex = '1000';
+                        symbol.style.transition = 'all 3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                        symbol.style.pointerEvents = 'none';
+                        heartsContainer.appendChild(symbol);
+
+                        setTimeout(() => {
+                            const angle = (Math.PI * 2 * i) / 50;
+                            const distance = Math.random() * 400 + 200;
+                            const x = Math.cos(angle) * distance;
+                            const y = Math.sin(angle) * distance;
+                            
+                            symbol.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 720}deg) scale(${Math.random() + 0.5})`;
+                            symbol.style.opacity = '0';
+                        }, 10);
+
+                        setTimeout(() => {
+                            symbol.remove();
+                        }, 3000);
+                    }, i * 30);
+                }
+
+                // Add sparkle effect
+                this.createSparkles();
+            }
+
+            createSparkles() {
+                const heartsContainer = document.getElementById('heartsContainer');
+                
+                for (let i = 0; i < 30; i++) {
+                    setTimeout(() => {
+                        const sparkle = document.createElement('div');
+                        sparkle.textContent = '✨';
+                        sparkle.style.position = 'fixed';
+                        sparkle.style.left = Math.random() * 100 + '%';
+                        sparkle.style.top = Math.random() * 100 + '%';
+                        sparkle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                        sparkle.style.zIndex = '999';
+                        sparkle.style.animation = 'sparkle 1s ease-in-out';
+                        sparkle.style.pointerEvents = 'none';
+                        heartsContainer.appendChild(sparkle);
+
+                        setTimeout(() => {
+                            sparkle.remove();
+                        }, 1000);
+                    }, i * 100);
+                }
+            }
+
+            // ================================
+            // Button Effects
+            // ================================
+            addButtonEffects() {
+                const buttons = document.querySelectorAll('.btn');
+                
+                buttons.forEach(button => {
+                    button.addEventListener('mouseenter', () => {
+                        this.createButtonSparkle(button);
+                    });
+
+                    button.addEventListener('click', (e) => {
+                        this.createRipple(e, button);
+                    });
+                });
+            }
+
+            createButtonSparkle(button) {
+                const sparkle = document.createElement('span');
+                sparkle.textContent = '✨';
+                sparkle.style.position = 'absolute';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.fontSize = '12px';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.animation = 'sparkle 0.8s ease-out forwards';
+                button.appendChild(sparkle);
+
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 800);
+            }
+
+            createRipple(event, button) {
+                const ripple = document.createElement('span');
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+
+                button.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            }
+        }
+
+        // ================================
+        // Initialize App
+        // ================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const app = new ChocolateDayApp();
+            
+            // Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Prevent default behavior on touch devices for better experience
+            document.addEventListener('touchstart', (e) => {
+                if (e.target.classList.contains('btn')) {
+                    e.target.style.transform = 'scale(0.95)';
+                }
+            });
+            
+            document.addEventListener('touchend', (e) => {
+                if (e.target.classList.contains('btn')) {
+                    setTimeout(() => {
+                        e.target.style.transform = '';
+                    }, 100);
+                }
+            });
+
+            console.log('🍫 Happy Chocolate Day App Initialized! 💕');
+        });
+    </script>
+</body>
+</html>
